@@ -2,6 +2,8 @@ package networkEcho_III;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -23,57 +25,43 @@ class ClientHandler extends Thread
    public void run()
       {
       boolean isRunning = true;
-      InputStream inputStream;
+      
+      ObjectInputStream objectInputStream;
+      
       try
          {
-         inputStream = clientSocket.getInputStream();
-         OutputStream outputStream = clientSocket.getOutputStream();
+    	  objectInputStream=new ObjectInputStream(clientSocket.getInputStream());
+    	  ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
          System.out.println("Handler " + threadId + " starting.");
 
-         int msgSent = 0;
          int msgRcvd = 0;
 
          while (isRunning)
             {
             String localTag = "Client Handler #" + threadId;
-            byte[] inBuffer = new byte[Info.maxPackageSise];
-            byte[] outBuffer;
-            int bytesRead = inputStream.read(inBuffer, 0, inBuffer.length);
-
-            if (bytesRead >= 0)
-               {
-               String plainText = (new String(inBuffer, 0, bytesRead));
-               String reversedText = reverseString(plainText);
-
-               System.out.println(localTag + " read .... " + (++msgRcvd) + ": " + plainText + " (" + bytesRead + " bytes)");
-
-               outBuffer = reversedText.getBytes();
-               outputStream.write(outBuffer);
-
-               System.out.println(localTag + " writing . " + (++msgSent) + ": " + reversedText + " (" + bytesRead + " bytes)");
-               System.out.println();
-
-               isRunning = !plainText.startsWith(Info.shutDownCmd);
-               }
+           
+        	 ObjetoMensagem objetoMensagemRecebido = (ObjetoMensagem) objectInputStream.readObject();
+        	 
+        	 System.out.println(localTag + " read .... " + (++msgRcvd) + ": " + objetoMensagemRecebido.texto);
+        	
+        	 objetoMensagemRecebido.texto="Caraio borracha";
+        	 outputStream.writeObject(objetoMensagemRecebido);
             }
 
          outputStream.close();
-         inputStream.close();
+         objectInputStream.close();
          clientSocket.close();
 
          father.threadClosed(this.threadId);
          }
       catch (IOException exceptionLaunched)
          {
-         // TODO Auto-generated catch block
          exceptionLaunched.printStackTrace();
-         }
+         } catch (Exception e) {
+		e.printStackTrace();
+	}
       }
 
-   private static String reverseString(String plainText)
-      {
-      return ((new StringBuffer(plainText)).reverse().toString());
-      }
 
    }
