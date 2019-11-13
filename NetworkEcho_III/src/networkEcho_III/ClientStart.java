@@ -2,6 +2,8 @@ package networkEcho_III;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Random;
@@ -9,38 +11,43 @@ import java.util.Random;
 public class ClientStart
    {
    private static final String module    = "Client";
-   private static final Random randGen   = new Random();
    private static boolean      isRunning = true;
+   private static int[][] matriz = criaMatriz(2,3);
 
-   public static void main(String[] args)
+   public static void main(String[] args) throws Exception
       {
       System.out.println(Info.getUniformTitle());
       System.out.println(module + " running.");
       System.out.println();
+      imprimeMatriz(matriz);
+      matriz = matrizTansposta(matriz);
+      imprimeMatriz(matriz);
+      
+      
 
       try (Socket clientSocket = new Socket("localhost", Info.listeningPort))
          {
-         int msgSent = 0;
-         int msgRcvd = 0;
          System.out.println("Local TCP port " + clientSocket.getLocalPort());
          System.out.println("Sending bytes to TCP port " + clientSocket.getPort());
          System.out.println();
 
-         OutputStream outputStream = clientSocket.getOutputStream();
-         InputStream inputStream = clientSocket.getInputStream();
+         ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+         ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
          while (isRunning)
             {
-            byte[] inBuffer = new byte[Info.maxPackageSise];
-            byte[] outBuffer = msgFactory();
-            System.out.println(module + " sending " + (++msgSent) + ": " + (new String(outBuffer)));
+            
+        	 ObjetoMensagem objetoParaEnvio = new ObjetoMensagem("Pega essa mano");
+        	 
+        	 System.out.println(objetoParaEnvio.texto);
+        	 
+            outputStream.writeObject(objetoParaEnvio);
+            
+            ObjetoMensagem returnMessage = (ObjetoMensagem)inputStream.readObject();
 
-            outputStream.write(outBuffer, 0, outBuffer.length);
-            inputStream.read(inBuffer);
-
-            System.out.println(module + " received " + (++msgRcvd) + ": " + (new String(inBuffer)));
+            
+            System.out.println(returnMessage.texto);
             System.out.println();
-
             Thread.sleep(Info.loopDelay);
             }
          clientSocket.close();
@@ -55,31 +62,37 @@ public class ClientStart
       System.out.println(Info.getUniformTitle());
       System.out.println(module + " stopped.");
       }
+   
+       static int[][] criaMatriz(int N, int M){
+        int [][] matriz = new int[N][M];
+        Random gerador = new Random();
+        for(int i = 0; i < matriz.length; i++){
+            for (int j = 0; j < matriz[0].length; j++){
+                matriz[i][j] = gerador.nextInt(10);
+            }
+        }
+        return matriz;
+    }
+    
+    public static void imprimeMatriz(int[][] matriz){
+        for(int i = 0; i < matriz.length; i++){
+            for (int j = 0; j < matriz[0].length; j++){
+                System.out.print(matriz[i][j] + " ");
+            }
+            System.out.println("\n");
+        }
+    }
+    
+    public static int[][] matrizTansposta(int[][] matriz) {
+        int[][] retorno = new int[matriz[0].length][matriz.length];//invertendo a linha com a coluna
+        for (int lin = 0; lin < retorno.length; lin++) {
+            for (int col = 0; col < retorno[lin].length; col++) {
+                retorno[lin][col] = matriz[col][lin];
+            }
+        }
+        return retorno;
+    }
 
-   private static byte[] msgFactory()
-      {
-      byte[] buffer = null;
-
-      if (randGen.nextInt(20) == 0)
-         {
-         buffer = Info.shutDownCmd.getBytes();
-         isRunning = false;
-         }
-      else
-         {
-         buffer = fillArray();
-         }
-      return (buffer);
-      }
-
-   private static byte[] fillArray()
-      {
-      byte[] buffer;
-      buffer = new byte[Info.maxPackageSise];
-      for (int count = 0; count < buffer.length; count++)
-         {
-         buffer[count] = (byte) ('A' + randGen.nextInt(26));
-         }
-      return buffer;
-      }
    }
+
+
