@@ -14,21 +14,12 @@ import java.util.Random;
  * @author Clara Anna
  */
 public class Matriz implements Serializable{
-	private int linhas;
-	private int colunas;
 	private int[][] matriz;
 	private static final long serialVersionUID = 1L;
 
-	
-	
-	
-
-
 	public Matriz(int linhas, int colunas) {
 		super();
-		this.linhas = linhas;
-		this.colunas = colunas;
-		 this.matriz = new int[linhas][colunas];
+		this.matriz = new int[linhas][colunas];
 	        Random gerador = new Random();
 	        for(int i = 0; i < matriz.length; i++){
 	            for (int j = 0; j < matriz[0].length; j++){
@@ -39,8 +30,6 @@ public class Matriz implements Serializable{
 	
 	public Matriz(int linhas, int colunas, int m) {
 		super();
-		this.linhas = linhas;
-		this.colunas = colunas;
 		this.matriz = new int[linhas][colunas];		
 	}
     
@@ -73,25 +62,6 @@ public class Matriz implements Serializable{
     public void setMatriz(int[][] matriz) {
         this.matriz = matriz;
     }
-    
-    
-    
-    
-    
-    /*public static void main(String[] args) {
-    	Matriz m = new Matriz (3,2);
-    	m.imprimeMatriz(m.matriz);
-    	
-    	System.out.print("\n\n");
-    	
-    	int[][] t = m.matrizTansposta(m.matriz);
-    	m.imprimeMatriz(t);
-    	
-    }*/
-
-
-
-
 }
 
     

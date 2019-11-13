@@ -1,65 +1,66 @@
 package networkEcho_III;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Random;
 
 public class ClientStart
    {
-   private static final String module    = "Client";
-   private static boolean      isRunning = true;
 
    public static void main(String[] args) throws Exception
       {
-      System.out.println(Info.getUniformTitle());
-      System.out.println(module + " running.");
+      System.out.println("Módulo cliente iniciado");
       System.out.println();
       
-      
-
       try (Socket clientSocket = new Socket("localhost", Info.listeningPort))
          {
          System.out.println("Local TCP port " + clientSocket.getLocalPort());
-         System.out.println("Sending bytes to TCP port " + clientSocket.getPort());
          System.out.println();
 
+         //Stream para envio do objeto
          ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+         //Stream para recebimento do objeto
          ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-         while (isRunning)
+         int i=0;
+         while (i<10)
             {
-                //envia objeto
-        	/*ObjetoMensagem objetoParaEnvio = new ObjetoMensagem("Pega essa mano"); 
-        	System.out.println(objetoParaEnvio.texto);
-        	outputStream.writeObject(objetoParaEnvio);*/
+        	 	//Cria um novo objeto de matriz
                 Matriz matrizEnvio = new Matriz(3,2);
+                //Imprime a matriz criada na tela
+                System.out.println("Matriz original");
                 matrizEnvio.imprimeMatriz(matrizEnvio.getMatriz());
+                //Envia o objeto matriz para o servidor
                 outputStream.writeObject(matrizEnvio);
                 
-                //recebe objeto
-                /*ObjetoMensagem returnMessage = (ObjetoMensagem)inputStream.readObject();
-                System.out.println(returnMessage.texto);*/
+                System.out.println();
+                
+                //Aguarda o retorno do servidor (objeto de mesmo tipo)
                 Matriz matrizRetorno = (Matriz)inputStream.readObject();
+                //Imprime a matriz de retorno
+                System.out.println("Matriz transposta pelo servidor");
                 matrizRetorno.imprimeMatriz(matrizRetorno.getMatriz());
                 
             System.out.println();
-            Thread.sleep(Info.loopDelay);
+            
+            //Aguarda 3s
+            Thread.sleep(3000);
+            
+            i++;
             }
+         //Encerra o socket de comunicação
          clientSocket.close();
          }
+      
       catch (IOException | InterruptedException exception)
          {
-         System.out.println("Exception launched: " + exception.getMessage());
+         System.out.println("Ocorreu uma exceção: " + exception.getMessage());
          System.exit(1);
          }
 
       System.out.println();
-      System.out.println(Info.getUniformTitle());
-      System.out.println(module + " stopped.");
+      System.out.println("Módulo cliente encerrado");
       }
 
    }

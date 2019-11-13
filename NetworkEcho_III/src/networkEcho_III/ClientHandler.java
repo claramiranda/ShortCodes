@@ -33,27 +33,31 @@ class ClientHandler extends Thread
     	  objectInputStream=new ObjectInputStream(clientSocket.getInputStream());
     	  ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
 
-         System.out.println("Handler " + threadId + " starting.");
-
          int msgRcvd = 0;
 
          while (isRunning)
             {
-            String localTag = "Client Handler #" + threadId;
-           
-        	 //ObjetoMensagem objetoMensagemRecebido = (ObjetoMensagem) objectInputStream.readObject();
+        	 try
+        	 {
+        	 //Recebe o objeto do cliente e faz um cast para matriz
         	 Matriz matrizRecebida = (Matriz) objectInputStream.readObject();
-        	 
-                 System.out.println(localTag + " lendo matriz original .... " + (++msgRcvd) + ": \n" );
-                 matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
+
+             //Imprime a matriz original
+        	 System.out.println("Matriz original recebida do cliente");
+             matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
         	
-        	 //objetoMensagemRecebido.texto="Caraio borracha";
+             //Define a matriz transposta
         	 matrizRecebida.setMatriz(matrizRecebida.matrizTansposta(matrizRecebida.getMatriz()));
-                 System.out.println("\n imprime matriz transposta: \n");
-                 matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
-                 outputStream.writeObject(matrizRecebida);
-                 
-                 //outputStream.writeObject(objetoMensagemRecebido);
+             
+        	 //Imprime a matriz transposta
+        	 System.out.println("Matriz transposta para envio ao cliente");
+        	 matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
+             outputStream.writeObject(matrizRecebida);
+        	 }
+        	 catch(IOException e)
+        	 {
+        	 
+        	 }
             }
 
          outputStream.close();
