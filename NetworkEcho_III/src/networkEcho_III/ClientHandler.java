@@ -41,12 +41,19 @@ class ClientHandler extends Thread
             {
             String localTag = "Client Handler #" + threadId;
            
-        	 ObjetoMensagem objetoMensagemRecebido = (ObjetoMensagem) objectInputStream.readObject();
+        	 //ObjetoMensagem objetoMensagemRecebido = (ObjetoMensagem) objectInputStream.readObject();
+        	 Matriz matrizRecebida = (Matriz) objectInputStream.readObject();
         	 
-        	 System.out.println(localTag + " read .... " + (++msgRcvd) + ": " + objetoMensagemRecebido.texto);
+                 System.out.println(localTag + " lendo matriz original .... " + (++msgRcvd) + ": \n" );
+                 matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
         	
-        	 objetoMensagemRecebido.texto="Caraio borracha";
-        	 outputStream.writeObject(objetoMensagemRecebido);
+        	 //objetoMensagemRecebido.texto="Caraio borracha";
+        	 matrizRecebida.setMatriz(matrizRecebida.matrizTansposta(matrizRecebida.getMatriz()));
+                 System.out.println("\n imprime matriz transposta: \n");
+                 matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
+                 outputStream.writeObject(matrizRecebida);
+                 
+                 //outputStream.writeObject(objetoMensagemRecebido);
             }
 
          outputStream.close();

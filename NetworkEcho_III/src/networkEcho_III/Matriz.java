@@ -66,6 +66,18 @@ public class Matriz implements Serializable{
         return retorno;
     }
     
+    public int[][] getMatriz() {
+        return matriz;
+    }
+    
+    public void setMatriz(int[][] matriz) {
+        this.matriz = matriz;
+    }
+    
+    
+    
+    
+    
     /*public static void main(String[] args) {
     	Matriz m = new Matriz (3,2);
     	m.imprimeMatriz(m.matriz);
@@ -76,5 +88,10 @@ public class Matriz implements Serializable{
     	m.imprimeMatriz(t);
     	
     }*/
+
+
+
+
 }
+
     
