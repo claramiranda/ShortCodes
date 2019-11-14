@@ -7,6 +7,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ *
+ * classe de manipulação dos objetos recebidos do cliente
+ */
 class ClientHandler extends Thread
    {
    private final MultitaskServer father;
@@ -39,20 +43,20 @@ class ClientHandler extends Thread
             {
         	 try
         	 {
-        	 //Recebe o objeto do cliente e faz um cast para matriz
-        	 Matriz matrizRecebida = (Matriz) objectInputStream.readObject();
+                    //Recebe o objeto do cliente e faz um cast para matriz
+                    Matriz matrizRecebida = (Matriz) objectInputStream.readObject();
 
-             //Imprime a matriz original
-        	 System.out.println("Matriz original recebida do cliente");
-             matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
-        	
-             //Define a matriz transposta
-        	 matrizRecebida.setMatriz(matrizRecebida.matrizTansposta(matrizRecebida.getMatriz()));
+                    //Imprime a matriz original
+                    System.out.println("Matriz original recebida do cliente");
+                    matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
+
+                    //Define a matriz transposta
+                    matrizRecebida.setMatriz(matrizRecebida.matrizTansposta(matrizRecebida.getMatriz()));
              
-        	 //Imprime a matriz transposta
-        	 System.out.println("Matriz transposta para envio ao cliente");
-        	 matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
-             outputStream.writeObject(matrizRecebida);
+                    //Imprime a matriz transposta
+                    System.out.println("Matriz transposta para envio ao cliente");
+                    matrizRecebida.imprimeMatriz(matrizRecebida.getMatriz());
+                    outputStream.writeObject(matrizRecebida);
         	 }
         	 catch(IOException e)
         	 {

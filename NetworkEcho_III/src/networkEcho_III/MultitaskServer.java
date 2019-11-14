@@ -5,6 +5,10 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ *
+ * classe de manipulação do servidor
+ */
 class MultitaskServer
    {
    private boolean      isRunning;
@@ -35,7 +39,7 @@ class MultitaskServer
          }
       catch (IOException exception)
          {
-         System.out.println("Ocorreu uma exce��o: " + exception.getMessage());
+         System.out.println("Ocorreu uma exceção: " + exception.getMessage());
          System.exit(1);
          }
 

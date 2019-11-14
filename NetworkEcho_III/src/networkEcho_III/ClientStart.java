@@ -5,12 +5,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+/**
+ *
+ * classe para instanciaÃ§Ã£o da matriz e envio ao servidor
+ */
+
 public class ClientStart
    {
 
    public static void main(String[] args) throws Exception
       {
-      System.out.println("Módulo cliente iniciado");
+      System.out.println("Mï¿½dulo cliente iniciado");
       System.out.println();
       
       try (Socket clientSocket = new Socket("localhost", Info.listeningPort))
@@ -24,7 +29,7 @@ public class ClientStart
          ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
          int i=0;
-         while (i<10)
+         while ( i == 0)
             {
         	 	//Cria um novo objeto de matriz
                 Matriz matrizEnvio = new Matriz(3,2);
@@ -47,20 +52,20 @@ public class ClientStart
             //Aguarda 3s
             Thread.sleep(3000);
             
-            i++;
+            //i++;
             }
-         //Encerra o socket de comunicação
+         //Encerra o socket de comunicaï¿½ï¿½o
          clientSocket.close();
          }
       
       catch (IOException | InterruptedException exception)
          {
-         System.out.println("Ocorreu uma exceção: " + exception.getMessage());
-         System.exit(1);
+            System.out.println("Ocorreu uma exceÃ§Ã£o: " + exception.getMessage());
+            System.exit(1);
          }
 
-      System.out.println();
-      System.out.println("Módulo cliente encerrado");
+        System.out.println();
+        System.out.println("MÃ³dulo cliente encerrado");
       }
 
    }
