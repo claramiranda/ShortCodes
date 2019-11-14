@@ -12,23 +12,19 @@ import java.util.Random;
 /**
  *
  * @author Clara Anna
+ * classe para manipulação de matrizes
  */
 public class Matriz implements Serializable{
-	private int linhas;
-	private int colunas;
 	private int[][] matriz;
 	private static final long serialVersionUID = 1L;
 
-	
-	
-	
-
-
+        /**
+        *
+        * construtor da classe
+        */
 	public Matriz(int linhas, int colunas) {
 		super();
-		this.linhas = linhas;
-		this.colunas = colunas;
-		 this.matriz = new int[linhas][colunas];
+		this.matriz = new int[linhas][colunas];
 	        Random gerador = new Random();
 	        for(int i = 0; i < matriz.length; i++){
 	            for (int j = 0; j < matriz[0].length; j++){
@@ -36,14 +32,11 @@ public class Matriz implements Serializable{
 	            }
 	        }			
 	}
-	
-	public Matriz(int linhas, int colunas, int m) {
-		super();
-		this.linhas = linhas;
-		this.colunas = colunas;
-		this.matriz = new int[linhas][colunas];		
-	}
-    
+
+        /**
+        *
+        * metodo que imprime uma matriz no prompt
+        */
     public void imprimeMatriz(int [][] m){
         for(int i = 0; i < m.length; i++){
             for (int j = 0; j < m[0].length; j++){
@@ -53,6 +46,10 @@ public class Matriz implements Serializable{
         }
     }
     
+    /**
+    *
+    * método que recebe uma matriz e retorna uma matriz transposta
+    */
     public static int[][] matrizTansposta(int[][] matriz) {
         int[][] retorno = new int[matriz[0].length][matriz.length];//invertendo a linha com a coluna
         for (int lin = 0; lin < retorno.length; lin++) {
@@ -65,7 +62,10 @@ public class Matriz implements Serializable{
         }
         return retorno;
     }
-    
+    /**
+    *
+    * getters and setters
+    */
     public int[][] getMatriz() {
         return matriz;
     }
@@ -73,25 +73,6 @@ public class Matriz implements Serializable{
     public void setMatriz(int[][] matriz) {
         this.matriz = matriz;
     }
-    
-    
-    
-    
-    
-    /*public static void main(String[] args) {
-    	Matriz m = new Matriz (3,2);
-    	m.imprimeMatriz(m.matriz);
-    	
-    	System.out.print("\n\n");
-    	
-    	int[][] t = m.matrizTansposta(m.matriz);
-    	m.imprimeMatriz(t);
-    	
-    }*/
-
-
-
-
 }
 
     

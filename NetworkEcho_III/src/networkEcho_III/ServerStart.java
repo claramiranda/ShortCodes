@@ -2,15 +2,14 @@ package networkEcho_III;
 
 public class ServerStart
    {
-   private static final String module = "Multitask Server";
 
+ /**
+ *
+ * classe de instanciação e inicialização do servidor
+ */
    public static void main(String[] args)
       {
-      System.out.println(Info.getUniformTitle());
-      System.out.println(module + " running.");
-      System.out.println();
-
-      MultitaskServer server = new MultitaskServer(module);
+      MultitaskServer server = new MultitaskServer();
       server.startServer();
       }
    }
