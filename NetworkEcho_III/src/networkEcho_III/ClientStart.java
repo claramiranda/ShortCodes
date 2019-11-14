@@ -1,97 +1,72 @@
 package networkEcho_III;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Random;
+
+/**
+ *
+ * classe para instanciação da matriz e envio ao servidor
+ */
 
 public class ClientStart
    {
-   private static final String module    = "Client";
-   private static boolean      isRunning = true;
-   private static int[][] matriz = criaMatriz(2,3);
 
    public static void main(String[] args) throws Exception
       {
-      System.out.println(Info.getUniformTitle());
-      System.out.println(module + " running.");
+      System.out.println("M�dulo cliente iniciado");
       System.out.println();
-      imprimeMatriz(matriz);
-      matriz = matrizTansposta(matriz);
-      imprimeMatriz(matriz);
       
-      
-
       try (Socket clientSocket = new Socket("localhost", Info.listeningPort))
          {
          System.out.println("Local TCP port " + clientSocket.getLocalPort());
-         System.out.println("Sending bytes to TCP port " + clientSocket.getPort());
          System.out.println();
 
+         //Stream para envio do objeto
          ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
+         //Stream para recebimento do objeto
          ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
 
-         while (isRunning)
+         int i=0;
+         while ( i == 0)
             {
-            
-        	 ObjetoMensagem objetoParaEnvio = new ObjetoMensagem("Pega essa mano");
-        	 
-        	 System.out.println(objetoParaEnvio.texto);
-        	 
-            outputStream.writeObject(objetoParaEnvio);
-            
-            ObjetoMensagem returnMessage = (ObjetoMensagem)inputStream.readObject();
-
-            
-            System.out.println(returnMessage.texto);
+        	 	//Cria um novo objeto de matriz
+                Matriz matrizEnvio = new Matriz(3,2);
+                //Imprime a matriz criada na tela
+                System.out.println("Matriz original");
+                matrizEnvio.imprimeMatriz(matrizEnvio.getMatriz());
+                //Envia o objeto matriz para o servidor
+                outputStream.writeObject(matrizEnvio);
+                
+                System.out.println();
+                
+                //Aguarda o retorno do servidor (objeto de mesmo tipo)
+                Matriz matrizRetorno = (Matriz)inputStream.readObject();
+                //Imprime a matriz de retorno
+                System.out.println("Matriz transposta pelo servidor");
+                matrizRetorno.imprimeMatriz(matrizRetorno.getMatriz());
+                
             System.out.println();
-            Thread.sleep(Info.loopDelay);
+            
+            //Aguarda 3s
+            Thread.sleep(3000);
+            
+            //i++;
             }
+         //Encerra o socket de comunica��o
          clientSocket.close();
          }
+      
       catch (IOException | InterruptedException exception)
          {
-         System.out.println("Exception launched: " + exception.getMessage());
-         System.exit(1);
+            System.out.println("Ocorreu uma exceção: " + exception.getMessage());
+            System.exit(1);
          }
 
-      System.out.println();
-      System.out.println(Info.getUniformTitle());
-      System.out.println(module + " stopped.");
+        System.out.println();
+        System.out.println("Módulo cliente encerrado");
       }
-   
-       static int[][] criaMatriz(int N, int M){
-        int [][] matriz = new int[N][M];
-        Random gerador = new Random();
-        for(int i = 0; i < matriz.length; i++){
-            for (int j = 0; j < matriz[0].length; j++){
-                matriz[i][j] = gerador.nextInt(10);
-            }
-        }
-        return matriz;
-    }
-    
-    public static void imprimeMatriz(int[][] matriz){
-        for(int i = 0; i < matriz.length; i++){
-            for (int j = 0; j < matriz[0].length; j++){
-                System.out.print(matriz[i][j] + " ");
-            }
-            System.out.println("\n");
-        }
-    }
-    
-    public static int[][] matrizTansposta(int[][] matriz) {
-        int[][] retorno = new int[matriz[0].length][matriz.length];//invertendo a linha com a coluna
-        for (int lin = 0; lin < retorno.length; lin++) {
-            for (int col = 0; col < retorno[lin].length; col++) {
-                retorno[lin][col] = matriz[col][lin];
-            }
-        }
-        return retorno;
-    }
 
    }
 
